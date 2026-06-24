@@ -49,7 +49,6 @@ export interface Project {
   coreFeatures?: Array<{ icon: string; title: string; description: string }>
   challenges?: ProjectChallenge[]
   pitfalls?: string[]
-  interviewPoints?: string[]
   review?: string
   reviewTags?: string[]
 }

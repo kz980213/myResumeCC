@@ -56,13 +56,6 @@ export const projects: Project[] = [
       'DailyHotApi 各平台返回字段不统一，统一 adapter 层是维护多平台适配的关键。',
       'watchEffect 驱动每秒 tick 需注意在组件卸载时清理 interval，防止内存泄漏。',
     ],
-    interviewPoints: [
-      '为什么用 git submodule 而不是 npm 包？submodule 的适用场景与管理成本如何权衡？',
-      'watch(selectedIds) 只拉增量的具体实现：如何判断"缺失"，如何保证并发安全？',
-      'watchEffect 和 watch 在每秒 tick 场景的区别？这里选 watchEffect 的原因？',
-      '静默降级的边界条件：何时触发 mock，如何让用户对降级状态有合理预期？',
-      '如果平台数量扩展到 50+，当前架构的瓶颈在哪里，如何优化？',
-    ],
     review:
       '单日完成从 submodule 接入到 21 平台适配的全量开发，核心收获在于多服务本地联调的工程化思路（concurrently + Vite proxy），以及 Vue 响应式系统在按需缓存场景的精细控制。后续可考虑 WebSocket 推送替换轮询，或增加收藏 / 历史趋势功能。',
     reviewTags: ['Vue3', 'Git Submodule', '按需加载', '缓存策略', '降级容错', 'Vite Proxy'],
@@ -142,14 +135,6 @@ export const projects: Project[] = [
       'SiliconFlow Embedding API 有并发限制，asyncio.gather 无限并发批次会触发 429；需引入 Semaphore 控制最大并发数。',
       'Google Cloud Vision API 按页计费，扫描件入库前需判断文档是否含文字层，有文字层优先走 PyMuPDF，降低 OCR 成本。',
     ],
-    interviewPoints: [
-      '混合检索（pgvector + BM25）比单一向量检索效果好在哪里？RRF 融合的原理与 k 值选取？',
-      'reranker 为何不能作为"有无内容"的判断依据？这个认知是怎么踩坑得来的？',
-      'asyncio.to_thread + asyncio.Lock 解决 Session 并发冲突的思路，和直接用同步 Session 相比优劣？',
-      'SSE token / citation / done 三类事件分离的设计意图？前端如何保证事件顺序不错乱？',
-      'Torch-free 部署的意义：去掉 PyTorch 对推理质量有影响吗？权衡点是什么？',
-      '页眉页脚噪声统计检测方法的局限性？什么情况下会误删正文内容？',
-    ],
     review:
       '这是工程复杂度最高的独立项目，核心收获在三处：其一，reranker 误判迫使我将"内容判断"职责从检索层移交 LLM，澄清了 RAG 各组件的职责边界；其二，asyncio 并发与 SQLAlchemy AsyncSession 的冲突加深了对异步会话生命周期的理解；其三，页眉页脚噪声统计方法验证了"不依赖版式元数据的鲁棒性思路"在 CJK 文档场景的实用价值。',
     reviewTags: ['RAG', '混合检索', 'RRF', 'pgvector', 'SSE', 'ACL 权限', 'asyncio', 'Torch-free'],
@@ -222,13 +207,6 @@ export const projects: Project[] = [
       'Vercel catch-all rewrite（/* → /index.html）必须排在 /api/* rewrite 之后；顺序颠倒会导致 API 请求被 SPA 吞掉，返回 HTML。',
       'lru_cache 缓存绑定进程，Render 多实例部署时各实例缓存独立，冷启动后首次请求仍会回源。生产建议改用 Redis 或 Supabase 缓存。',
       '高德地图异步加载完成前调用 AMap.Map() 会抛出未定义错误；需等待 AMapLoader.load() Promise resolve 后再初始化。',
-    ],
-    interviewPoints: [
-      '服务端代理绕过第三方 CDN Referer ACL 的思路，以及 lru_cache 在多进程/多实例场景的局限性？',
-      'choropleth 配色的线性插值实现方式，以及边界数据异常（count=0, min>0）如何防御？',
-      'AMap.InfoWindow 事件冒泡导致 tooltip 抖动的根因，防抖方案与其他备选方案的对比？',
-      '省市两层 Polygon 叠加时 fillOpacity 状态如何统一管理，返回上级时如何批量恢复？',
-      'AI 问答如何从数据库按问题关键词提取上下文？检索策略是什么，精度如何保证？',
     ],
     review:
       '这是第一个把地图可视化、多维筛选与 AI 问答整合在一起的全栈项目。最有价值的收获是理解了"第三方 CDN Referer ACL"这类环境差异引发的隐性 bug，以及地图层叠状态管理的复杂性（选中/恢复需要统一维护引用列表）。AI 问答部分验证了上下文检索 + SSE 的前后端协作模式，与企业知识库项目形成互补。',

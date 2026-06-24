@@ -141,7 +141,7 @@ export default function ProjectDetailPage() {
       )}
 
       {/* Challenges + Pitfalls */}
-      {(project.challenges?.length || project.pitfalls?.length || project.interviewPoints?.length) && (
+      {(project.challenges?.length || project.pitfalls?.length) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           {project.challenges?.length && (
             <Card className="bg-card border-border">
@@ -170,20 +170,6 @@ export default function ProjectDetailPage() {
                     {project.pitfalls.map((p) => (
                       <li key={p} className="text-[11px] text-muted-foreground leading-relaxed pl-3 relative before:absolute before:left-0 before:top-2 before:w-1 before:h-1 before:rounded-full before:bg-primary/60">
                         {p}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
-            {project.interviewPoints?.length && (
-              <Card className="bg-card border-border">
-                <CardContent className="p-5">
-                  <SectionTitle icon="💬">面试可讲点</SectionTitle>
-                  <ul className="space-y-2">
-                    {project.interviewPoints.map((pt) => (
-                      <li key={pt} className="text-[11px] text-muted-foreground leading-relaxed pl-3 relative before:absolute before:left-0 before:top-2 before:w-1 before:h-1 before:rounded-full before:bg-amber-500/60">
-                        {pt}
                       </li>
                     ))}
                   </ul>
