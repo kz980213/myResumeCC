@@ -9,12 +9,17 @@ import type { ProjectCategory } from '@/types'
 
 type FilterValue = 'all' | ProjectCategory
 
-const filters: { value: FilterValue; label: string }[] = [
-  { value: 'all', label: `全部项目 ${projects.length}` },
-  { value: 'ai', label: `AI 应用 ${projects.filter(p => p.category === 'ai').length}` },
-  { value: 'enterprise', label: `企业系统 ${projects.filter(p => p.category === 'enterprise').length}` },
-  { value: 'learning', label: `学习实践 ${projects.filter(p => p.category === 'learning').length}` },
+const FILTER_DEFS: { value: FilterValue; label: string }[] = [
+  { value: 'all', label: '全部项目' },
+  { value: 'personal', label: '个人项目' },
+  { value: 'ai', label: 'AI 应用' },
+  { value: 'enterprise', label: '企业系统' },
+  { value: 'learning', label: '学习实践' },
 ]
+
+const filters = FILTER_DEFS
+  .map(f => ({ ...f, label: f.value === 'all' ? `${f.label} ${projects.length}` : `${f.label} ${projects.filter(p => p.category === f.value).length}` }))
+  .filter(f => f.value === 'all' || projects.some(p => p.category === f.value))
 
 export default function ProjectsPage() {
   const [searchParams, setSearchParams] = useSearchParams()

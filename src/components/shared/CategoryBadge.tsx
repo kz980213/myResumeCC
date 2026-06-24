@@ -9,6 +9,7 @@ const styles: Record<ProjectCategory, string> = {
   ai: 'bg-blue-950/60 text-blue-400 border-blue-800/60',
   enterprise: 'bg-violet-950/60 text-violet-400 border-violet-800/60',
   learning: 'bg-amber-950/60 text-amber-400 border-amber-800/60',
+  personal: 'bg-emerald-950/60 text-emerald-400 border-emerald-800/60',
 }
 
 export default function CategoryBadge({ category, label }: CategoryBadgeProps) {

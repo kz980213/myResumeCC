@@ -18,7 +18,7 @@ export interface SkillSummary {
   description: string
 }
 
-export type ProjectCategory = 'ai' | 'enterprise' | 'learning'
+export type ProjectCategory = 'ai' | 'enterprise' | 'learning' | 'personal'
 
 export interface ProjectMeta {
   type: string
