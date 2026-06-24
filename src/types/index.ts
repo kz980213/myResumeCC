@@ -50,7 +50,6 @@ export interface Project {
   challenges?: ProjectChallenge[]
   pitfalls?: string[]
   interviewPoints?: string[]
-  codeSnippet?: { language: string; code: string }
   review?: string
   reviewTags?: string[]
 }

@@ -63,26 +63,6 @@ export const projects: Project[] = [
       '静默降级的边界条件：何时触发 mock，如何让用户对降级状态有合理预期？',
       '如果平台数量扩展到 50+，当前架构的瓶颈在哪里，如何优化？',
     ],
-    codeSnippet: {
-      language: 'TypeScript',
-      code: `// useHotList.ts — 增量加载，切换平台不重置缓存
-const hotListMap = reactive<Record<string, HotItem[]>>({})
-
-watch(selectedIds, async (next) => {
-  const missing = next.filter(id => !hotListMap[id])
-  await Promise.all(missing.map(fetchMissing))
-}, { immediate: true })
-
-async function fetchMissing(platformId: string) {
-  try {
-    const data = await fetchHotList(platformId)
-    hotListMap[platformId] = data
-  } catch {
-    // 静默降级：API 不可用时使用内置 mock 数据
-    hotListMap[platformId] = mockData[platformId] ?? []
-  }
-}`,
-    },
     review:
       '单日完成从 submodule 接入到 21 平台适配的全量开发，核心收获在于多服务本地联调的工程化思路（concurrently + Vite proxy），以及 Vue 响应式系统在按需缓存场景的精细控制。后续可考虑 WebSocket 推送替换轮询，或增加收藏 / 历史趋势功能。',
     reviewTags: ['Vue3', 'Git Submodule', '按需加载', '缓存策略', '降级容错', 'Vite Proxy'],
@@ -170,24 +150,6 @@ async function fetchMissing(platformId: string) {
       'Torch-free 部署的意义：去掉 PyTorch 对推理质量有影响吗？权衡点是什么？',
       '页眉页脚噪声统计检测方法的局限性？什么情况下会误删正文内容？',
     ],
-    codeSnippet: {
-      language: 'Python',
-      code: `# 混合检索 + RRF 融合核心逻辑
-async def hybrid_search(query: str, acl_tags: list[str], top_k: int = 20):
-    vec_results  = await vector_search(query, acl_tags, top_k)  # pgvector 余弦
-    bm25_results = await bm25_search(query, acl_tags, top_k)    # BM25 + GIN 索引
-
-    # RRF 融合（k=60 为经验值，平滑排名差异）
-    scores: dict[str, float] = {}
-    for rank, chunk in enumerate(vec_results):
-        scores[chunk.id] = scores.get(chunk.id, 0) + 1 / (60 + rank + 1)
-    for rank, chunk in enumerate(bm25_results):
-        scores[chunk.id] = scores.get(chunk.id, 0) + 1 / (60 + rank + 1)
-
-    merged = sorted(scores, key=scores.__getitem__, reverse=True)[:top_k]
-    # reranker 仅做排序，阈值 0.001 兜底过滤纯噪音
-    return await rerank(query, merged, threshold=0.001)`,
-    },
     review:
       '这是工程复杂度最高的独立项目，核心收获在三处：其一，reranker 误判迫使我将"内容判断"职责从检索层移交 LLM，澄清了 RAG 各组件的职责边界；其二，asyncio 并发与 SQLAlchemy AsyncSession 的冲突加深了对异步会话生命周期的理解；其三，页眉页脚噪声统计方法验证了"不依赖版式元数据的鲁棒性思路"在 CJK 文档场景的实用价值。',
     reviewTags: ['RAG', '混合检索', 'RRF', 'pgvector', 'SSE', 'ACL 权限', 'asyncio', 'Torch-free'],
@@ -268,31 +230,6 @@ async def hybrid_search(query: str, acl_tags: list[str], top_k: int = 20):
       '省市两层 Polygon 叠加时 fillOpacity 状态如何统一管理，返回上级时如何批量恢复？',
       'AI 问答如何从数据库按问题关键词提取上下文？检索策略是什么，精度如何保证？',
     ],
-    codeSnippet: {
-      language: 'Python',
-      code: `# FastAPI 服务端代理 DataV GeoJSON，绕过 Referer ACL
-from functools import lru_cache
-import urllib.request
-from fastapi import APIRouter
-from fastapi.responses import Response
-
-router = APIRouter(prefix="/api/map")
-
-@router.get("/geo/{adcode}")
-async def proxy_geojson(adcode: str):
-    data = _fetch_cached(adcode)          # 进程内缓存，同 adcode 只请求一次
-    return Response(
-        content=data,
-        media_type="application/json",
-        headers={"Cache-Control": "max-age=86400"},
-    )
-
-@lru_cache(maxsize=64)
-def _fetch_cached(adcode: str) -> bytes:
-    url = f"https://geo.datav.aliyun.com/areas_v3/bound/{adcode}_full.json"
-    with urllib.request.urlopen(url) as resp:  # 服务端请求，无 Referer 头
-        return resp.read()`,
-    },
     review:
       '这是第一个把地图可视化、多维筛选与 AI 问答整合在一起的全栈项目。最有价值的收获是理解了"第三方 CDN Referer ACL"这类环境差异引发的隐性 bug，以及地图层叠状态管理的复杂性（选中/恢复需要统一维护引用列表）。AI 问答部分验证了上下文检索 + SSE 的前后端协作模式，与企业知识库项目形成互补。',
     reviewTags: ['高德地图', 'choropleth', 'GeoJSON 代理', 'SSE', 'Claude API', 'lru_cache', 'Vercel rewrite'],

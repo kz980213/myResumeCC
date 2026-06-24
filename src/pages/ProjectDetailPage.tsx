@@ -1,6 +1,5 @@
-import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, Check, Copy } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Check } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import TechBadge from '@/components/shared/TechBadge'
@@ -17,7 +16,7 @@ function SectionTitle({ icon, children }: { icon: string; children: React.ReactN
 }
 
 export default function ProjectDetailPage() {
-  const [codeCopied, setCodeCopied] = useState(false)
+
   const { id } = useParams<{ id: string }>()
   const project = projects.find(p => p.id === id)
 
@@ -195,44 +194,6 @@ export default function ProjectDetailPage() {
         </div>
       )}
 
-      {/* Code snippet */}
-      {project.codeSnippet && (
-        <Card className="bg-card border-border mb-4">
-          <CardContent className="p-5">
-            <SectionTitle icon="💻">核心代码片段</SectionTitle>
-            <div className="rounded-md overflow-hidden border border-zinc-800">
-              <div className="bg-[#1a1c27] px-4 py-2 flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-mono-code text-[11px] text-zinc-500">{project.codeSnippet.language}</span>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(project.codeSnippet!.code).then(() => {
-                        setCodeCopied(true)
-                        setTimeout(() => setCodeCopied(false), 2000)
-                      })
-                    }}
-                    className="flex items-center gap-1 text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors"
-                    aria-label="复制代码"
-                  >
-                    {codeCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                    {codeCopied ? '已复制' : '复制'}
-                  </button>
-                </div>
-              </div>
-              <pre className="bg-[#0d1117] p-5 overflow-x-auto m-0">
-                <code className="font-mono-code text-[12px] text-[#a8b4cf] leading-relaxed">
-                  {project.codeSnippet.code}
-                </code>
-              </pre>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Review */}
       {project.review && (
